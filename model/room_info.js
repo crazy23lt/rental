@@ -2,18 +2,23 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const roomInfoSchema = new Schema(
   {
-    room_name: {
+    buildId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "build_info",
+      required: true,
+    },
+    houseName: {
       type: String,
       required: true,
     },
-    room_type: {
-      type: String,
-      required: true,
+    houseStatus: {
+      type: Number,
+      default: 0,
+      enum: [0, 1, 2],
     },
-    password: {
-      type: String,
-      required: true,
-    },
+    houseType: { type: Number },
+    houseConfig: { type: Object },
+    houseCost: { type: Object },
   },
   { collection: "room_info" }
 );
