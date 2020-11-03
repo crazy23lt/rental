@@ -1,7 +1,7 @@
 // 创建一个连接好的mongoose
 const mongoose = require("mongoose");
 mongoose
-  .connect(`mongodb://127.0.0.1:27017/room_db`, {
+  .connect(`mongodb://RentalAdmin:liutao2568%40gmail.com@127.0.0.1:27017/Rental`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,

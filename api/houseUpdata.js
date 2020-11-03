@@ -1,12 +1,17 @@
 const Room = require("../model/room_info");
-const Unit = require("../model/unit_info");
 module.exports = async (req, res) => {
-  const { id } = req.body;
+  const { id, houseName, houseType, houseConfig, houseCost } = req.body;
   try {
-    let ret = true;
+    let updata = {
+      houseName,
+      houseType,
+      houseCost,
+      houseConfig
+    }
+    let ret = await Room.findByIdAndUpdate(id, updata, { new: true, select: { BuildId: 0 } });
     if (ret) {
       res.json({
-        data: req.body,
+        data: ret,
         meta: {
           status: 200,
           msg: "信息更新成功",

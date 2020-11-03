@@ -3,14 +3,8 @@ module.exports = async (req, res) => {
   const { id } = req.body;
   try {
     let ret = await Room.find(
-      { build_id: id },
-      { house_status: 1, user_id: 1, _id: 1, house_name: 1, unit_id: 1 }
-    ).populate("unit_id", {
-      unit_config: 1,
-      unit_cost: 1,
-      unit_room: 1,
-      _id: 0,
-    });
+      { buildId: id }, { buildId: 0 }
+    );
     if (ret) {
       res.json({
         data: ret,

@@ -16,6 +16,8 @@ Build.post("/allhouse", require("../api/allHouse"));
 Build.post("/house/:type/:page/:size/:status", require("../api/house"));
 // 查询房屋具体信息
 Build.post("/houseinfo", require("../api/houseInfo"));
+// 改变房屋状态
+Build.post("/changestatus",require("../api/changeStatus"));
 // 修改房屋基本信息  未完成hosueType
 Build.post("/houseupdata", require("../api/houseUpdata"));
 // 添加房间

@@ -2,9 +2,7 @@ const Room = require("../model/room_info");
 module.exports = async (req, res) => {
   const { id } = req.body;
   try {
-    let ret = await Room.findById(id, { __v: 0 })
-      .populate("unit_id", { unit_config: 1, unit_cost: 1, _id: 0 })
-      .populate("build_id", { build_cost: 1, _id: 0 });
+    let ret = await Room.findById(id, { buildId: 0 })
     if (ret) {
       res.json({
         data: ret,

@@ -4,38 +4,26 @@ module.exports = async (req, res) => {
   const { id } = req.body;
   try {
     let ret = await Build.find(
-      { user_id: id },
-      { _id: 1, build_name: 1 },
+      { landlordId: id },
+      { _id: 1, buildInfo: 1 },
       { lean: true }
     );
+    // 这里存在多个 公寓 但是只需要返回一个公寓的所有房间就行 其他公寓的房间通过 公寓ID去查询
     if (ret) {
+      let rooms = null;
       if (ret.length) {
-        let roomRet = await Room.find(
-          { build_id: ret[0]._id },
-          { house_status: 1, user_id: 1, _id: 1, house_name: 1, unit_id: 1 }
-        ).populate("unit_id", {
-          unit_config: 1,
-          unit_cost: 1,
-          unit_room: 1,
-          _id: 0,
-        });
-        ret[0].house = roomRet;
-        console.info(ret[0].house);
+        rooms = await Room.find(
+          { buildId: ret[0]._id },
+          { buildId: 0, __v: 0 }
+        );
       } else {
-        let roomRet = await Room.find(
+        rooms = await Room.find(
           { build_id: ret._id },
-          { house_status: 1, user_id: 1, _id: 1, house_name: 1, unit_id: 1 }
-        ).populate("unit_id", {
-          unit_config: 1,
-          unit_cost: 1,
-          unit_room: 1,
-          _id: 0,
-        });
-        ret.house = roomRet;
+          { buildId: 0, __v: 0 }
+        );
       }
-      console.info(ret.length);
       res.json({
-        data: ret,
+        data: { ret, rooms },
         meta: {
           status: 200,
           msg: "查询成功",
@@ -43,7 +31,7 @@ module.exports = async (req, res) => {
       });
     } else {
       res.json({
-        data: ret,
+        data: null,
         meta: {
           status: 202,
           msg: "查询失败，暂无出租公寓",
