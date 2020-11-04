@@ -17,10 +17,7 @@ module.exports = async (req, res) => {
           { buildId: 0, __v: 0 }
         );
       } else {
-        rooms = await Room.find(
-          { build_id: ret._id },
-          { buildId: 0, __v: 0 }
-        );
+        rooms = await Room.find({ build_id: ret._id }, { buildId: 0, __v: 0 });
       }
       res.json({
         data: { ret, rooms },

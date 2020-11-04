@@ -1,13 +1,17 @@
 const Contract = require("../model/contract_info");
 module.exports = async (req, res) => {
-  const { room_id, begin_tiem, electric_val, water_val } = req.body;
+  // 租房ID 起租时间 房间配置 基本信息（水电读数）
+  const { landlordId, roomId, beginTime, roomConfig, Baseinfo } = req.body;
   console.info(req.body);
   try {
     let ret = await new Contract({
-      room_id,
-      begin_tiem,
-      electric: { old_val: electric_val },
-      water_meter: { old_val: water_val },
+      roomId,
+      time: { beginTime },
+      roomConfig,
+      Baseinfo,
+      person: {
+        landlordId,
+      },
     }).save();
     if (ret) {
       res.json({

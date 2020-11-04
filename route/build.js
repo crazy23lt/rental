@@ -1,6 +1,42 @@
+const User = require("../model/user_info");
 const Build = require("express").Router();
-Build.use((req, res, next) => {
-  next();
+Build.use(async (req, res, next) => {
+  if (req.headers.authorization) {
+    try {
+      let userAuth = await User.findById(req.headers.authorization);
+      if (userAuth.role === 1) {
+        // 权限通过
+        next();
+      } else {
+        // 权限不通过
+        res.json({
+          data: null,
+          meta: {
+            msg: "权限不够，请前往认证房东",
+            status: 202,
+          },
+        });
+      }
+    } catch (e) {
+      console.info(e);
+      res.json({
+        data: null,
+        meta: {
+          msg: "服务端错误",
+          status: 500,
+        },
+      });
+    }
+  } else {
+    // 权限不通过
+    res.json({
+      data: null,
+      meta: {
+        msg: "权限不够，请前往认证房东",
+        status: 202,
+      },
+    });
+  }
 });
 // 新建公寓
 Build.post("/add", require("../api/addBuild"));
@@ -14,14 +50,10 @@ Build.post("/buildupdata", require("../api/buildUpdata"));
 Build.post("/allhouse", require("../api/allHouse"));
 // 更具公寓id 与 条件参数 返回对应的公寓的房间
 Build.post("/house/:type/:page/:size/:status", require("../api/house"));
-// 查询房屋具体信息
-Build.post("/houseinfo", require("../api/houseInfo"));
 // 改变房屋状态
-Build.post("/changestatus",require("../api/changeStatus"));
-// 修改房屋基本信息  未完成hosueType
+Build.post("/changestatus", require("../api/changeStatus"));
+// 修改房屋基本信息 
 Build.post("/houseupdata", require("../api/houseUpdata"));
 // 添加房间
 Build.post("/newhouse", require("../api/newHouse"));
-// 更具公寓ID 获取所有房型
-Build.post("/housetype", require("../api/hosueType"));
 module.exports = Build;

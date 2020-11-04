@@ -1,20 +1,35 @@
 const User = require("../model/user_info");
 module.exports = async (req, res) => {
-  const { id, userinfo } = req.body;
+  const { id, name, phone, idcard, city, area, town } = req.body;
   try {
-    let UpdataInfo = await User.findByIdAndUpdate(
-      id,
-      { userinfo },
-
-      {
-        new: true,
-        select: {
-          _id: 0,
-          openid: 0,
-          __v: 0,
+    let UpdataInfo;
+    if (id && name && phone && idcard && city && area && town) {
+      UpdataInfo = await User.findByIdAndUpdate(
+        id,
+        {
+          userinfo: {
+            name,
+            phone,
+            idcard,
+            city,
+            area,
+            town,
+          },
+          role: 1,
         },
-      }
-    );
+        {
+          new: true,
+          select: {
+            _id: 0,
+            openid: 0,
+            __v: 0,
+          },
+        }
+      );
+    } else {
+      UpdataInfo = false;
+    }
+
     if (UpdataInfo) {
       res.json({
         data: UpdataInfo,
@@ -26,7 +41,7 @@ module.exports = async (req, res) => {
     } else {
       res.json({
         data: null,
-        meta: { msg: "认证失败", status: 202 },
+        meta: { msg: "认证失败，表单信息填写有问题", status: 202 },
       });
     }
   } catch (e) {

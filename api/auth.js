@@ -2,7 +2,6 @@ const axios = require("axios");
 const User = require("../model/user_info");
 module.exports = async (req, res) => {
   const { code, wxinfo = null } = req.body;
-  console.info(wxinfo);
   try {
     let { data } = await axios({
       method: "GET",
@@ -11,21 +10,26 @@ module.exports = async (req, res) => {
     });
     const { openid } = data;
     let findUser = await User.findOne({ openid }, { __v: 0 });
+    console.info(findUser);
     if (findUser) {
       // 已注册
       res.json({
-        data: findUser._id,
+        data: {
+          id: findUser._id,
+          userinfo: findUser.userinfo ? findUser.userinfo : null,
+        },
         meta: {
           msg: "登陆成功",
           status: 200,
         },
       });
     } else {
+      console.info(req.body);
       // 没有注册过
       const saveData = Object.assign({ wxinfo }, { openid });
       let ret = await new User(saveData).save();
       res.json({
-        data: ret._id,
+        data: { id: ret._id, userinfo: ret.userinfo ? ret.userinfo : null },
         meta: {
           msg: "登陆并注册成功",
           status: 200,

@@ -50,7 +50,7 @@ module.exports = async (req, res) => {
     let NewHouse = await Room.insertMany(houseArray);
     if (newBuild && NewHouse) {
       res.json({
-        data: houseArray,
+        data: newBuild,
         meta: {
           status: 200,
           msg: "添加成功",

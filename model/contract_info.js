@@ -3,65 +3,60 @@ const Schema = mongoose.Schema;
 const ContractInfoSchema = new Schema(
   {
     // 房间ID
-    room_id: {
+    roomId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "room_info",
       required: true,
     },
-    // 租客id
-    user_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "user_info",
-      default: null,
+    time: {
+      // 起租日期
+      beginTime: {
+        type: String,
+        required: true,
+      },
+      // 结束时间
+      endTime: {
+        type: String,
+      },
+    },
+    roomConfig: {
+      // 租房配置
+      type: Object,
     },
     // 是否生效 默认失效  需要租客 确认
     invalid: {
-      type: Boolean,
-      default: false,
+      type: Number,
+      default: 0,
+      enum: [0, 1, 2], // 0 合同初始化完成，1 合同生效， 2 合同过期
     },
-    // 起租日期
-    begin_tiem: {
-      type: String,
-      required: true,
+    person: {
+      tenantId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user_info",
+        default: null,
+      },
+      landlordId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user_info",
+        default: null,
+      },
     },
-    // 租房人
-    tenant_info: {
+    // 合同信息
+    Baseinfo: {
       persons: {
         type: Number,
       },
-      name: {
-        type: String,
-      },
-      phone: {
+      // 电表读数
+      electric: {
         type: Number,
+        required: true,
       },
-      idcard: {
-        type: String,
+      // 水表
+      water: {
+        type: Number,
+        required: true,
       },
     },
-    // 电表读数
-    electric: {
-      new_val: {
-        type: Number,
-        default: 0,
-      },
-      old_val: {
-        type: Number,
-        default: 0,
-      },
-    },
-    // 水表
-    water_meter: {
-      new_val: {
-        type: Number,
-        default: 0,
-      },
-      old_val: {
-        type: Number,
-        default: 0,
-      },
-    },
-    //
   },
   { collection: "contract_info" }
 );

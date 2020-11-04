@@ -1,4 +1,3 @@
-const Unit = require("../model/unit_info");
 const Build = require("../model/build_info");
 module.exports = async (req, res) => {
   const { id } = req.body;

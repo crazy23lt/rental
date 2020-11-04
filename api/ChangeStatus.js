@@ -1,7 +1,6 @@
 const Room = require("../model/room_info");
 module.exports = async (req, res) => {
     const { id, status } = req.body;
-    console.info(typeof status)
     try {
         let ret = null;
         if (status === 0 || status === 1 || status === 2) {

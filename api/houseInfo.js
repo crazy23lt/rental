@@ -1,8 +1,9 @@
 const Room = require("../model/room_info");
 module.exports = async (req, res) => {
   const { id } = req.body;
+  console.info(id);
   try {
-    let ret = await Room.findById(id, { buildId: 0 })
+    let ret = await Room.findById(id, { buildId: 0 });
     if (ret) {
       res.json({
         data: ret,

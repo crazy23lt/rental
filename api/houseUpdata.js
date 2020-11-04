@@ -6,12 +6,15 @@ module.exports = async (req, res) => {
       houseName,
       houseType,
       houseCost,
-      houseConfig
-    }
-    let ret = await Room.findByIdAndUpdate(id, updata, { new: true, select: { BuildId: 0 } });
+      houseConfig,
+    };
+    let ret = await Room.findByIdAndUpdate(id, updata, {
+      new: true,
+      select: { BuildId: 0 },
+    });
     if (ret) {
       res.json({
-        data: ret,
+        data: null,
         meta: {
           status: 200,
           msg: "信息更新成功",

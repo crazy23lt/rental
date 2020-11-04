@@ -2,22 +2,13 @@ const Contract = require("../model/contract_info");
 module.exports = async (req, res) => {
   // 支持，通过关联房间Id 来查询
   // 支持，通过合同ID 来查询
-  const { id, room_id } = req.body;
+  const { id } = req.body;
   try {
-    let ret = null;
-    // 通过房间ID
-    if (room_id) {
-      ret = await Contract.findOne({ room_id, invalid: true }).populate({
-        path: "room_id",
-        populate: [{ path: "unit_id" }, { path: "build_id" }],
-      });
-    } else if (id) {
-      // 通过合同ID
-      ret = await Contract.findById(id).populate({
-        path: "room_id",
-        populate: [{ path: "unit_id" }, { path: "build_id" }],
-      });
-    }
+    let ret = await Contract.findById(id, {
+      time: 1,
+      roomConfig: 1,
+      Baseinfo: 1,
+    });
     if (ret) {
       res.json({
         data: ret,

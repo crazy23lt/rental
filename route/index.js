@@ -1,10 +1,11 @@
 const Build = require("./build");
 const Login = require("./login");
 const Contr = require("./contract");
+const Bill = require("./bill");
+const Query = require("./query");
 require("../model/user_info");
 require("../model/build_info");
 require("../model/room_info");
-require("../model/unit_info");
 module.exports = (app) => {
   // 设置跨域和相应数据格式
   app.all("*", function (req, res, next) {
@@ -30,6 +31,8 @@ module.exports = (app) => {
   app.use("/build", Build);
   app.use("/login", Login);
   app.use("/contr", Contr);
+  app.use("/bill", Bill);
+  app.use("/query", Query);
   app.use((req, res) => {
     res.status(500).json({ error: "api地址有问题", status: 500 });
   });
