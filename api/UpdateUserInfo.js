@@ -1,55 +1,41 @@
 const User = require("../model/user_info");
-const kou = function (obj) {
-  for (const key in obj) {
-    return false; // 非空对象
-  }
-  return true; // 空对象
-};
 module.exports = async (req, res) => {
-  const { id, name, phone, idcard, city, area, town, wxinfo = {} } = req.body;
+  const { id, name, phone, idcard, provinces, town } = req.body;
+  const { cert } = req.params; // 此次请求是否市房东认证请求还是普通修改信息请求
   try {
     let UpdataInfo;
-    if (id && name && phone && idcard && city && area && town) {
-      if (kou(wxinfo)) {
-        UpdataInfo = await User.findByIdAndUpdate(
-          id,
+    if (id && name && phone && idcard && provinces && town) {
+      let roleChange = cert - 0 ? { role: 1 } : {};
+      console.info(roleChange);
+      UpdataInfo = await User.findByIdAndUpdate(
+        id, Object.assign(roleChange,
           {
             userinfo: {
               name,
               phone,
               idcard,
-              city,
-              area,
+              provinces,
               town,
             },
-          },
-          { new: true, select: { _id: 0, __v: 0, openid: 0 } }
-        );
-      } else {
-        UpdataInfo = await User.findByIdAndUpdate(
-          id,
-          {
-            userinfo: {
-              name,
-              phone,
-              idcard,
-              city,
-              area,
-              town,
-            },
-            wxinfo,
-          },
-          { new: true, select: { _id: 0, __v: 0, openid: 0 } }
-        );
-      }
+          }),
+        { new: true, select: { __v: 0 } }
+      );
     } else {
       UpdataInfo = false;
     }
-
     if (UpdataInfo) {
-      // 已注册
+      const { userinfo, role, wxinfo } = UpdataInfo;
       res.json({
-        data: UpdataInfo,
+        data: {
+          nickName: wxinfo.nickName,
+          avatarUrl: wxinfo.avatarUrl,
+          role,
+          name: userinfo.name,
+          phone: userinfo.phone,
+          idcard: userinfo.idcard,
+          provinces: userinfo.provinces,
+          town: userinfo.town,
+        },
         meta: {
           status: 200,
           msg: "信息更新成功",

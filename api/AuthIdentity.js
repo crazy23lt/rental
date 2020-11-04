@@ -1,9 +1,9 @@
 const User = require("../model/user_info");
 module.exports = async (req, res) => {
-  const { id, name, phone, idcard, city, area, town } = req.body;
+  const { id, name, phone, idcard, provinces, town } = req.body;
   try {
     let UpdataInfo;
-    if (id && name && phone && idcard && city && area && town) {
+    if (id && name && phone && idcard && provinces && town) {
       UpdataInfo = await User.findByIdAndUpdate(
         id,
         {
@@ -11,37 +11,38 @@ module.exports = async (req, res) => {
             name,
             phone,
             idcard,
-            city,
-            area,
+            provinces,
             town,
           },
-          role: 1,
         },
-        {
-          new: true,
-          select: {
-            _id: 0,
-            openid: 0,
-            __v: 0,
-          },
-        }
+        { new: true, select: { __v: 0 } }
       );
     } else {
       UpdataInfo = false;
     }
-
     if (UpdataInfo) {
+      // 已注册
+      const { userinfo, role, wxinfo } = UpdataInfo;
       res.json({
-        data: UpdataInfo,
+        data: {
+          nickName: wxinfo.nickName,
+          avatarUrl: wxinfo.avatarUrl,
+          role,
+          name: userinfo.name,
+          phone: userinfo.phone,
+          idcard: userinfo.idcard,
+          provinces: userinfo.provinces,
+          town: userinfo.town,
+        },
         meta: {
           status: 200,
-          msg: "认证成功",
+          msg: "信息更新成功",
         },
       });
     } else {
       res.json({
         data: null,
-        meta: { msg: "认证失败，表单信息填写有问题", status: 202 },
+        meta: { msg: "信息更新失败,表单数据缺失", status: 202 },
       });
     }
   } catch (e) {

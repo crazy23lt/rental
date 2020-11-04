@@ -5,5 +5,5 @@ Query.use((req, res, next) => {
 // 查询房屋具体信息
 Query.post("/houseinfo", require("../api/houseInfo"));
 // 获取个人信息
-Query.post("/")
+Query.post("/userinfo", require("../api/UserInfo"));
 module.exports = Query;

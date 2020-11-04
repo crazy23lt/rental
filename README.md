@@ -2,7 +2,7 @@
 
 ## 1.1. API V1 接口说明
 
-- 接口基准地址：`http://127.0.0.1:3001/`
+- 接口基准地址：`http://10.1.8.196:3001/`
 - 服务端已开启 CORS 跨域支持
 - 使用 HTTP Status Code 标识状态
 - 数据返回格式统一使用 JSON
@@ -28,146 +28,67 @@
 - 请求路径：login/auth
 - 请求方法：post
 - 请求参数
-
-| 参数名 | 参数说明 | 备注                                        |
-| ------ | -------- | ------------------------------------------- |
-| code   | string   | wx.login 返回的 res.code （用户登录凭证）   |
-| wxinfo | object   | wx.getUserInfo 返回的 userInfo （用户信息） |
-
+  | 参数名 | 参数说明 | 备注 |
+  | ------ | -------- | ------------------------------------------- |
+  | code | string | wx.login 返回的 res.code （用户登录凭证） |
+  | wxinfo | object | wx.getUserInfo 返回的 userInfo （用户信息） |
 - 响应参数
-
-| 参数名   | 参数说明       | 备注                  |
-| -------- | -------------- | --------------------- |
-| \_id     | 用户 ID        | 用户唯一 ID           |
-| userinfo | 用户完善的信息 | 没有信息则会返回 null |
-
-- 响应数据
-
-```json
-{
-  "data": "5fa1feabbbbdec15c410dc20",
-  "meta": {
-    "msg": "登录成功",
-    "status": 200
-  }
-}
-```
+  | 参数名 | 参数说明 | 备注 |
+  | --------- | ------------ | ------------------ |
+  | userid | 用户 ID | 用户唯一 ID |
+  | openid | 微信 openid | |
+  | role | 用户角色 | 房东：1；租客：0 |
+  | userinfo | 用户个人信息 | 房东认证或租客合同 |
+  | nickName | 微信昵称 | |
+  | avatarUrl | 微信头像 | |
 
 ## 1.3. 用户管理
 
-### 1.3.1. 用户信息更新
+### 1.3.1. 用户信息更新（支持房东认证）
 
-- 请求路径：login/update
+- 请求路径：login/update/:cert
 - 请求方法：post
 - 请求参数
-
-```js
-{
-    id: "5fa242eae4bf8b369c2af91a", // 必填
-    name: "鸭滑", // 必填
-    phone: "13636065890", // 必填
-    idcard: "421125099821003748", // 必填
-    city: "深圳市", // 必填
-    area: "南山区", // 必填
-    town: "学府村",                         // 必填
-    wxinfo: {/* wx.getUserInfo返回的数据 */}
-}
-```
-
+  | 参数名 | 参数说明 | 备注 |
+  | --------- | ---------------------------- | ------------------------------------------------------ |
+  | id | 用户 ID | 用户唯一 ID |
+  | name | 用户真实姓名 | 必填 |
+  | phone | 用户真实电话 | 必填 |
+  | idcard | 用户身份证 | 必填 |
+  | provinces | 省市区 | 必填 |
+  | town | 乡镇 | 必填 |
+  | cert | 此次信息更新是否属于认证更新 | cert:1(认证房东更新)cert:0(普通信息更新)[url 地址参数] |
 - 响应参数
+  | 参数名 | 参数说明 | 备注 |
+  | --------- | ------------ | -------------------- |
+  | nickName | 微信昵称 | |
+  | role | 用户角色 | 0：普通租客，1：房东 |
+  | avatarUrl | 微信用户头像 | |
+  | name | 用户真实姓名 | |
+  | phone | 用户真实电话 | |
+  | idcard | 用户身份证 | |
+  | provinces | 省市区 | |
+  | town | 乡镇 | |
 
-| 参数名   | 参数说明     | 备注                 |
-| -------- | ------------ | -------------------- |
-| \_id     | 用户 ID      | 用户唯一 ID          |
-| role     | 用户角色     | 0：普通租客，1：房东 |
-| wxinfo   | 微信用户信息 | Object               |
-| userinfo | 用户基本信息 | 姓名打电话等         |
+### 1.3.2 获取用户信息
 
-- 响应数据
-
-```json
-{
-  "data": {
-    "role": 1,
-    "wxinfo": {
-      "nickName": "鸭滑",
-      "gender": 0,
-      "language": "zh_CN",
-      "city": "Guangzhou",
-      "province": "Guangdong",
-      "country": "China",
-      "avatarUrl": "https://thirdwx.qlogo.cn/mmopen/vi_32/PiajxSqBRaEIKicibicTUKHLXqvichD90VyvzSeTuFVfPqn1y25ibIST2TsWDeUsfD6ibljd7FR26kDicEdlA5qhHXxh4g/132"
-    },
-    "userinfo": {
-      "name": "鸭滑",
-      "phone": "13636065890",
-      "idcard": "421125099821003748",
-      "city": "深圳市",
-      "area": "南山区",
-      "town": "学府村"
-    }
-  },
-  "meta": {
-    "status": 200,
-    "msg": "信息更新成功"
-  }
-}
-```
-
-### 1.3.2. 房东认证
-
-- 请求路径：login/authidentity
+- 请求路径：query/userinfo
 - 请求方法：post
 - 请求参数
-
-| 参数名 | 参数说明 | 备注     |
-| ------ | -------- | -------- |
-| id     | 用户 ID  | 不能为空 |
-| name   | 姓名     | 不能为空 |
-| phone  | 电话号   | 不能为空 |
-| idcard | 身份证号 | 不能为空 |
-| city   | 城市     | 不能为空 |
-| area   | 区       | 不能为空 |
-| town   | 镇       | 不能为空 |
-
+  | 参数名 | 参数说明 | 备注 |
+  | --------- | ------------ | -------------------- |
+  | userid | 用户唯一 ID | |
 - 响应参数
-
-| 参数名   | 参数说明     | 备注                 |
-| -------- | ------------ | -------------------- |
-| role     | 用户角色     | 0：普通租客，1：房东 |
-| wxinfo   | 微信用户信息 | Object               |
-| userinfo | 用户基本信息 | 姓名打电话等         |
-
-- 响应数据
-
-```json
-{
-  "data": {
-    "role": 1,
-    "wxinfo": {
-      "nickName": "洲际捣蛋",
-      "gender": 1,
-      "language": "zh_CN",
-      "city": "Guangzhou",
-      "province": "Guangdong",
-      "country": "China",
-      "avatarUrl": "https://thirdwx.qlogo.cn/mmopen/vi_32/PiajxSqBRaEIKicibicTUKHLXqvichD90VyvzSeTuFVfPqn1y25ibIST2TsWDeUsfD6ibljd7FR26kDicEdlA5qhHXxh4g/132"
-    },
-    "userinfo": {
-      "name": "蜡笔小新",
-      "phone": "13636065890",
-      "idcard": "421125099821003748",
-      "city": "深圳市",
-      "area": "南山区",
-      "town": "学府村"
-    }
-  },
-  "meta": {
-    "status": 200,
-    "msg": "认证成功"
-  }
-}
-```
+  | 参数名 | 参数说明 | 备注 |
+  | --------- | ------------ | -------------------- |
+  | nickName | 微信昵称 | |
+  | role | 用户角色 | 0：普通租客，1：房东 |
+  | avatarUrl | 微信用户头像 | |
+  | name | 用户真实姓名 | |
+  | phone | 用户真实电话 | |
+  | idcard | 用户身份证 | |
+  | provinces | 省市区 | |
+  | town | 乡镇 | |
 
 ## 1.4. 房屋管理
 

@@ -7,8 +7,16 @@ const buildInfoSchema = new Schema(
       ref: "user_info",
       required: true,
     },
-    buildInfo: { type: Object },
-    buildCost: { type: Object },
+    buildInfo: {
+      buildName: { type: String, required: true, },
+      buildLayer: { type: Number, required: true, },
+      layerCount: { type: Number, required: true, },
+    },
+    buildCost: {
+      net: { type: Number, required: true, },
+      electricity: { type: Number, required: true, },
+      water: { type: Number, required: true, },
+    },
     houseType: {
       type: Array,
     },
