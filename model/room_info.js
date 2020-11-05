@@ -16,7 +16,7 @@ const roomInfoSchema = new Schema(
       default: 0,
       enum: [0, 1, 2], // 未发布 发布未出租 已出租
     },
-    houseType: { type: String }, // 户型
+    unitType: { type: Number }, // 户型
     houseConfig: {
       bathroom: {
         type: Number,
