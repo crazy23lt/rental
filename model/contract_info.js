@@ -19,9 +19,73 @@ const ContractInfoSchema = new Schema(
         type: String,
       },
     },
+    // 租房配置
     roomConfig: {
-      // 租房配置
-      type: Object,
+      // 房间名称
+      houseName: {
+        type: String,
+        required: true,
+      },
+      // 房间户型
+      houseType: {
+        type: Number,
+        required: true,
+      },
+      // 家电电器等设备
+      houseConfig: {
+        bathroom: {
+          type: Number,
+          default: 0,
+          enum: [0, 1],
+          required: true,
+        },
+        air_condition: {
+          type: Number,
+          default: 0,
+          enum: [0, 1],
+          required: true,
+        },
+        geyser: {
+          type: Number,
+          default: 0,
+          enum: [0, 1],
+          required: true,
+        },
+        gas: {
+          type: Number,
+          default: 0,
+          enum: [0, 1],
+          required: true,
+        },
+        broadband: {
+          type: Number,
+          default: 0,
+          enum: [0, 1],
+          required: true,
+        },
+      },
+      houseCost: {
+        clear: {
+          type: Number,
+          required: true,
+        },
+        rent: {
+          type: Number,
+          required: true,
+        },
+        net: {
+          type: Number,
+          required: true,
+        },
+        electricity: {
+          type: Number,
+          required: true,
+        },
+        water: {
+          type: Number,
+          required: true,
+        },
+      },
     },
     // 是否生效 默认失效  需要租客 确认
     invalid: {
@@ -29,18 +93,17 @@ const ContractInfoSchema = new Schema(
       default: 0,
       enum: [0, 1, 2], // 0 合同初始化完成，1 合同生效， 2 合同过期
     },
-    person: {
-      tenantId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "user_info",
-        default: null,
-      },
-      landlordId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "user_info",
-        default: null,
-      },
+    tenantId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user_info",
+      default: null,
     },
+    landlordId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user_info",
+      default: null,
+    },
+
     // 合同信息
     Baseinfo: {
       persons: {

@@ -22,5 +22,13 @@ Bill.use((req, res, next) => {
  *          超期大于一个月
  */
 
-Bill.post("/test", require("../api/test"));
+// 创建账单
+// Bill.post("/creatbills", require("../api/creatBill"));
+// // 
+// Bill.post("/getbill", require("../api/getBill"));
+// Bill.post("/getbills", require("../api/getBills"));
+// Bill.post("/setbills", require("../api/setBill"));
+// Bill.post("/oldbill", require("../api/oldBill"));
+// Bill.post("/payment", require("../api/payment"));
+
 module.exports = Bill;

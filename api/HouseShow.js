@@ -1,25 +1,18 @@
 const Room = require("../model/room_info");
 module.exports = async (req, res) => {
-  const { id } = req.body; // 公寓ID
-  const { type, page, size, status } = req.params;
-  console
+  const { type, page, size } = req.params;
+  console;
   try {
     let count = await Room.countDocuments({
-      buildId: id,
       houseType: type,
-      houseStatus: status,
+      houseStatus: 0, // 发布未出租
     });
-    let ret = await Room.find(
-      { buildId: id, houseType: type - 0, houseStatus: status - 0 },
-      {
-        buildId: 0,
-      }
-    )
+    let ret = await Room.find({ houseType: type, houseStatus: 0 })
       .limit(size - 0)
       .skip((page - 1) * size);
     if (ret) {
       res.json({
-        data: ret,
+        data: { count, ret },
         count,
         meta: {
           status: 200,

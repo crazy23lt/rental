@@ -18,42 +18,49 @@ module.exports = async (req, res) => {
       },
       houseType,
     };
-    let newBuild = await new Build(buildData).save();
+    console.info(buildData);
+    // let newBuild = await new Build(buildData).save();
     const houseArray = [];
-    for (let i = 1; i <= layer - 0; i++) {
-      for (let j = 1; j <= count - 0; j++) {
-        let {
-          bathroom,
-          air_condition,
-          geyser,
-          gas,
-          broadband,
-          clear,
-          rent,
-        } = houseType[i - 1];
-        let num = j >= 10 ? j : `0${j}`;
-        houseArray.push({
-          buildId: newBuild._id,
-          houseName: `${i}${num}房`,
-          houseType: houseType[i - 1].unitType,
-          houseConfig: {
-            bathroom,
-            air_condition,
-            geyser,
-            gas,
-            broadband,
-          },
-          houseCost: { clear, rent, net, electricity, water },
-        });
-      }
-    }
-    let NewHouse = await Room.insertMany(houseArray);
+    // for (let i = 1; i <= layer - 0; i++) {
+    //   for (let j = 1; j <= count - 0; j++) {
+    //     let {
+    //       bathroom,
+    //       air_condition,
+    //       geyser,
+    //       gas,
+    //       broadband,
+    //       clear,
+    //       rent,
+    //     } = houseType[i - 1];
+    //     let num = j >= 10 ? j : `0${j}`;
+    //     houseArray.push({
+    //       // buildId: newBuild._id,
+    //       houseName: `${i}${num}房`,
+    //       houseType: houseType[i - 1].unitType,
+    //       houseConfig: {
+    //         bathroom,
+    //         air_condition,
+    //         geyser,
+    //         gas,
+    //         broadband,
+    //       },
+    //       houseCost: { clear, rent, net, electricity, water },
+    //     });
+    //   }
+    // }
+    console.info(houseArray);
+    // let NewHouse = await Room.insertMany(houseArray);
+    // let Count = await Room.countDocuments({ buildId: newBuild._id });
     if (newBuild && NewHouse) {
-      res.json({
-        data: newBuild,
+      const {} = res.json({
+        data: {
+          Count,
+          buildInfo: newBuild.buildInfo,
+          buildCost: newBuild.buildCost,
+        },
         meta: {
           status: 200,
-          msg: "添加成功",
+          msg: "房子添加成功",
         },
       });
     } else {

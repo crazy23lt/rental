@@ -686,3 +686,42 @@
   }
 }
 ```
+
+## 1.6 合同相关
+
+### 1.6.1 初始化合同
+
+- 请求路径：/contr/init
+- 请求方法：post
+- 请求参数
+
+| 参数名      | 参数说明                                      | 备注                           |
+| ----------- | --------------------------------------------- | ------------------------------ |
+| roomId      | 出租屋唯一 ID                                 | 用户 id                        |
+| beginTime   | 起始出租时间                                  | Date.now()                     |
+| landlordId  | 房东用户 ID                                   | 用户 id                        |
+| houseName   | 房间名称                                      |                                |
+| houseType   | 户型 （1 房或\*房）                           | Number 类型                    |
+| houseConfig | {bathroom,air_condition,geyser,gas,broadband} | object 类型;属性值 Number 类型 |
+| houseCost   | {clear,,rent,net,electricity,water}           | object 类型;属性值 Number 类型 |
+| Baseinfo    | {electric,water,}                             | object 类型;属性值 Number 类型 |
+
+- 响应参数
+
+| 参数名 | 参数说明    | 备注                     |
+| ------ | ----------- | ------------------------ |
+| id     | 合同唯一 ID | 发送到租客激活合同有效性 |
+
+### 1.6.2 激活合同
+
+- 请求路径：/contr/visa
+- 请求方法：post
+- 请求参数
+
+| 参数名   | 参数说明     | 备注                    |
+| -------- | ------------ | ----------------------- |
+| id       | 合同唯一 ID  | 确认激活有效性的合同 id |
+| tenantId | 租客用户 ID  |                         |
+| persons  | 住房人数     |                         |
+| phone    | 租客电话     | 选填                    |
+| idcard   | 租客身份证号 | 选填                    |

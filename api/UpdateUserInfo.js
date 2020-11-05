@@ -6,7 +6,6 @@ module.exports = async (req, res) => {
     let UpdataInfo;
     if (id && name && phone && idcard && provinces && town) {
       let roleChange = cert - 0 ? { role: 1 } : {};
-      console.info(roleChange);
       UpdataInfo = await User.findByIdAndUpdate(
         id, Object.assign(roleChange,
           {

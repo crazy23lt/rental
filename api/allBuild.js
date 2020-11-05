@@ -9,16 +9,14 @@ module.exports = async (req, res) => {
       { lean: true }
     );
     // 这里存在多个 公寓 但是只需要返回一个公寓的所有房间就行 其他公寓的房间通过 公寓ID去查询
-    if (ret) {
-      let rooms = null;
-      if (ret.length) {
-        rooms = await Room.find(
-          { buildId: ret[0]._id },
-          { buildId: 0, __v: 0 }
-        );
-      } else {
-        rooms = await Room.find({ build_id: ret._id }, { buildId: 0, __v: 0 });
-      }
+    if (
+      Object.prototype.toString.call(ret).slice(8, -1) === "Array" &&
+      ret.length !== 0
+    ) {
+      let rooms = await Room.find(
+        { buildId: ret[0]._id },
+        { buildId: 0, __v: 0 }
+      );
       res.json({
         data: { ret, rooms },
         meta: {

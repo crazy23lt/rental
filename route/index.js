@@ -28,12 +28,20 @@ module.exports = (app) => {
     if (req.method == "OPTIONS") res.sendStatus(200);
     /*让options请求快速返回*/ else next();
   });
+
   app.use("/build", Build);
   app.use("/login", Login);
   app.use("/contr", Contr);
   app.use("/bill", Bill);
   app.use("/query", Query);
+  // api 部署测试
+  app.post("/test", (req, res) => {
+    res.json({
+      data: null,
+      meta: { msg: "Api部署完毕，已能够正常访问", status: 200 },
+    });
+  });
   app.use((req, res) => {
-    res.status(500).json({ error: "api地址有问题", status: 500 });
+    res.json({ error: "api地址有问题", status: 202 });
   });
 };

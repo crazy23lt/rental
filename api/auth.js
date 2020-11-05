@@ -1,12 +1,16 @@
-
 const User = require("../model/user_info");
 const jscode = require("../utils/jscode2session");
 module.exports = async (req, res) => {
   const { code, wxinfo: insertwx } = req.body;
+  console.info(req.body);
   try {
     let { openid: opid } = await jscode(code);
     // 每次登录都将更新 wxinfo 信息
-    let findUser = await User.findOneAndUpdate({ openid: opid }, { wxinfo: insertwx }, { new: true }).lean();
+    let findUser = await User.findOneAndUpdate(
+      { openid: opid },
+      { wxinfo: insertwx },
+      { new: true }
+    ).lean();
     if (findUser) {
       // 已注册
       const { openid, role, userinfo, wxinfo, _id } = findUser;
@@ -17,7 +21,7 @@ module.exports = async (req, res) => {
           role,
           userinfo: userinfo.name === null ? null : userinfo,
           nickName: wxinfo.nickName,
-          avatarUrl: wxinfo.avatarUrl
+          avatarUrl: wxinfo.avatarUrl,
         },
         meta: {
           msg: "登陆成功",
@@ -27,7 +31,6 @@ module.exports = async (req, res) => {
     } else {
       // 没有注册过
       const saveData = Object.assign({ wxinfo: insertwx }, { openid: opid });
-      console.info(saveData)
       let ret = await new User(saveData).save();
       const { openid, role, userinfo, wxinfo, _id } = ret;
       res.json({
@@ -37,7 +40,7 @@ module.exports = async (req, res) => {
           role,
           userinfo: userinfo.name === null ? null : userinfo,
           nickName: wxinfo.nickName,
-          avatarUrl: wxinfo.avatarUrl
+          avatarUrl: wxinfo.avatarUrl,
         },
         meta: {
           msg: "注册并登陆成功",
