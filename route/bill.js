@@ -23,8 +23,13 @@ Bill.use((req, res, next) => {
  */
 
 // 创建账单
-// Bill.post("/creatbills", require("../api/creatBill"));
-// // 
+Bill.post("/creat", require("../api/createBill"));
+// 结算账单
+Bill.post("/settle", require("../api/settleBill"));
+// 获取账单
+Bill.post("/query/:page/:size", require("../api/queryBill"));
+//
+// //
 // Bill.post("/getbill", require("../api/getBill"));
 // Bill.post("/getbills", require("../api/getBills"));
 // Bill.post("/setbills", require("../api/setBill"));

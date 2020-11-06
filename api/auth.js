@@ -2,7 +2,6 @@ const User = require("../model/user_info");
 const jscode = require("../utils/jscode2session");
 module.exports = async (req, res) => {
   const { code, wxinfo: insertwx } = req.body;
-  console.info(req.body);
   try {
     let { openid: opid } = await jscode(code);
     // 每次登录都将更新 wxinfo 信息

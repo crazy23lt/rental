@@ -51,7 +51,7 @@ Build.post("/buildupdata", require("../api/buildUpdata"));
 // 更具公寓id 返回 公寓内的房间
 Build.post("/allhouse", require("../api/allHouse"));
 // 更具公寓id 与 条件参数 返回对应的公寓的房间
-Build.post("/house/:type/:page/:size/:status", require("../api/house"));
+Build.post("/house/:page/:size", require("../api/house"));
 // 改变房屋状态
 Build.post("/changestatus", require("../api/ChangeStatus"));
 // 修改房屋基本信息

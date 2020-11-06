@@ -6,19 +6,19 @@ module.exports = async (req, res) => {
     roomId,
     beginTime,
     houseName,
-    houseType,
+    unitType,
     houseConfig,
     houseCost,
     Baseinfo,
   } = req.body;
-  console.info(req.body);
+  // console.info(req.body);
   try {
     let ret = await new Contract({
       roomId,
       time: { beginTime },
       roomConfig: {
         houseName,
-        houseType,
+        unitType,
         houseConfig,
         houseCost,
       },

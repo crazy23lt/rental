@@ -1,8 +1,14 @@
 const Room = require("../model/room_info");
 module.exports = async (req, res) => {
-  const { buildId, houseName, houseType, houseConfig, houseCost } = req.body;
+  const { id, houseName, unitType, houseConfig, houseCost } = req.body;
   try {
-    let ret = new Room({ buildId, houseName, houseType, houseConfig, houseCost });
+    let ret = await new Room({
+      buildId: id,
+      houseName,
+      unitType,
+      houseConfig,
+      houseCost,
+    }).save();
     if (ret) {
       res.json({
         data: ret,

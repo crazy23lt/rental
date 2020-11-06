@@ -1,10 +1,10 @@
 const Room = require("../model/room_info");
 module.exports = async (req, res) => {
-  const { id, houseName, houseType, houseConfig, houseCost } = req.body;
+  const { id, houseName, unitType, houseConfig, houseCost } = req.body;
   try {
     let updata = {
       houseName,
-      houseType,
+      unitType,
       houseCost,
       houseConfig,
     };
