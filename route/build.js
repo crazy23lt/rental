@@ -43,7 +43,7 @@ Build.use(async (req, res, next) => {
 // 新建公寓
 Build.post("/add", require("../api/addBuild"));
 // 获取当前房东所有公寓
-Build.post("/allbuild", require("../api/allBuild"));
+Build.post("/allbuild/:page/:size", require("../api/allBuild"));
 // 根据 公寓 ID 获取公寓信息
 Build.post("/buildinfo", require("../api/buildInfo"));
 // 修改公寓信息
@@ -51,7 +51,7 @@ Build.post("/buildupdata", require("../api/buildUpdata"));
 // 更具公寓id 返回 公寓内的房间
 Build.post("/allhouse", require("../api/allHouse"));
 // 更具公寓id 与 条件参数 返回对应的公寓的房间
-Build.post("/house/:type/:page/:size/:status", require("../api/house"));
+Build.post("/house/:page/:size", require("../api/house"));
 // 改变房屋状态
 Build.post("/changestatus", require("../api/ChangeStatus"));
 // 修改房屋基本信息

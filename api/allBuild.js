@@ -2,6 +2,7 @@ const Build = require("../model/build_info");
 const Room = require("../model/room_info");
 module.exports = async (req, res) => {
   const { id } = req.body;
+  const { page, size } = req.params;
   try {
     let ret = await Build.find(
       { landlordId: id },
@@ -16,7 +17,9 @@ module.exports = async (req, res) => {
       let rooms = await Room.find(
         { buildId: ret[0]._id },
         { buildId: 0, __v: 0 }
-      );
+      )
+        .limit(size - 0)
+        .skip((page - 1) * size);
       res.json({
         data: { ret, rooms },
         meta: {

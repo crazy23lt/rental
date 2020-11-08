@@ -2,72 +2,52 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const BillInfoSchema = new Schema(
   {
-    // 公寓ID
-    buildID: {
+    // 合同ID
+    contractId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "build_info",
+      ref: "contract_info",
       required: true,
     },
-    // 起租时间
-    startTime: {
-      type: Date,
-      required: true,
+    // 持续时间
+    duration: {
+      startTime: {
+        type: Number,
+        required: true,
+      },
+      endTime: {
+        type: Number,
+        required: true,
+      },
     },
-    // 结束时间
-    endTime: {
-      type: Date,
-      required: true,
+    // 消耗
+    consume: {
+      //用水量
+      water: {
+        start: {
+          type: Number,
+          required: true,
+        },
+        end: {
+          type: Number,
+        },
+      },
+      //用电量
+      electric: {
+        start: {
+          type: Number,
+          required: true,
+        },
+        end: {
+          type: Number,
+        },
+      },
     },
-    // 租客名称
-    userName: {
-      type: String,
-      required: true,
-    },
-    // 房间名称
-    hourse: {
-      type: String,
-      required: true,
-    },
-    // 租金
-    rent: {
-      type: Number,
-      required: true,
-    },
-    // 清洁费
-    clear: Number,
-    //月首水费
-    preWater: {
-      type: Number,
-      required: true,
-    },
-    curWater: Number,
-    eachWater: {
-      type: Number,
-      required: true,
-    },
-    preElectric: {
-      type: Number,
-      required: true,
-    },
-    curElectric: Number,
-    eachElectric: {
-      type: Number,
-      required: true,
-    },
-    eachInter: Number,
-    other: Array,
-    othercost: Array,
-    oldCost: {
+    // 账单状态
+    status: {
       type: Number,
       default: 0,
-    },
-    max: {
-      trpe: Number,
-      default: 0,
-    },
-    toalCost: {
-      type: Number,
-    },
+      enum: [0, 1]  // 待付账单：0，已付账单：1
+    }
   },
   { collection: "bill_info" }
 );

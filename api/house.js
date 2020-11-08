@@ -1,26 +1,29 @@
 const Room = require("../model/room_info");
 module.exports = async (req, res) => {
-  const { id } = req.body; // 公寓ID
-  const { type, page, size, status } = req.params;
-  console
+  const { id, status = null, type = null } = req.body; // 公寓ID
+  const { page, size } = req.params;
+  console.info(`公寓ID:${id}`);
   try {
-    let count = await Room.countDocuments({
+    let querySelect = {
       buildId: id,
-      houseType: type,
-      houseStatus: status,
-    });
-    let ret = await Room.find(
-      { buildId: id, houseType: type - 0, houseStatus: status - 0 },
-      {
-        buildId: 0,
-      }
-    )
+    };
+    // 未出租  包含  1，2
+    if (status - 0 === 1 && type === null) {
+      querySelect.houseStatus = { $lte: status - 0 };
+    }
+    // 暗房型查询
+    if (type !== null && status === null) {
+      querySelect.unitType = type - 0;
+    }
+    console.info(querySelect);
+    let CountHouse = await Room.countDocuments(querySelect);
+    let filterHouse = await Room.find(querySelect)
       .limit(size - 0)
       .skip((page - 1) * size);
-    if (ret) {
+    if (filterHouse && CountHouse) {
+      console.info(filterHouse);
       res.json({
-        data: ret,
-        count,
+        data: { filterHouse, CountHouse },
         meta: {
           status: 200,
           msg: "条件查询成功",

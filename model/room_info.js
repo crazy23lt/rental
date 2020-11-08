@@ -7,6 +7,10 @@ const roomInfoSchema = new Schema(
       ref: "build_info",
       required: true,
     },
+    billId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "bill_info",
+    },
     houseName: {
       type: String,
       required: true,

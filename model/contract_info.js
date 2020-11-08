@@ -11,12 +11,13 @@ const ContractInfoSchema = new Schema(
     time: {
       // 起租日期
       beginTime: {
-        type: String,
+        type: Number,
         required: true,
       },
       // 结束时间
       endTime: {
-        type: String,
+        type: Number,
+        default: null,
       },
     },
     // 租房配置
@@ -27,7 +28,7 @@ const ContractInfoSchema = new Schema(
         required: true,
       },
       // 房间户型
-      houseType: {
+      unitType: {
         type: Number,
         required: true,
       },
@@ -108,6 +109,7 @@ const ContractInfoSchema = new Schema(
     Baseinfo: {
       persons: {
         type: Number,
+        default: null,
       },
       // 电表读数
       electric: {

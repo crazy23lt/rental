@@ -22,9 +22,15 @@ Bill.use((req, res, next) => {
  *          超期大于一个月
  */
 
-// 创建账单
-// Bill.post("/creatbills", require("../api/creatBill"));
-// // 
+// 获取账单列表
+Bill.post("/querylist/:page/:size", require("../api/queryBillList"));
+// 获取账单列表
+Bill.post("/queryinfo", require("../api/queryBillInfo"));
+// 更新账单信息
+Bill.post("/updateinfo", require("../api/updateBillInfo"));
+// 房东确认收租
+Bill.post("/confirmrent", require("../api/confirmRent"));
+// 
 // Bill.post("/getbill", require("../api/getBill"));
 // Bill.post("/getbills", require("../api/getBills"));
 // Bill.post("/setbills", require("../api/setBill"));
@@ -32,3 +38,38 @@ Bill.use((req, res, next) => {
 // Bill.post("/payment", require("../api/payment"));
 
 module.exports = Bill;
+
+
+/**
+ *
+ * 逻辑环境分析
+ *  1.
+ *
+ * 合同账单逻辑需求
+ * 合同   记录  房东 和  租客ID
+ * 每张合同对应一部生成账单的机器，
+ *    如何生成 账单？
+ * 首月账单：
+ *    根据合同 起始租房时间 戳来等于账单 月首时间戳 并自动计算 月末时间戳 （逾期：2，有效：1，失效：0）
+ * 后续账单（自动生成账单）
+ *
+ * 发送账单（加工机器打上标记）（查询并更新账单信息）
+ *     发送账单列表值会返回 逾期的账单，房东填写
+ *
+ *
+ *
+ *
+ * new Date("2019-12-1").getTime()
+ * 1575129600000
+ * new Date("2020-1-1").getTime()
+ * 1577808000000
+ * new Date("2020-2-1").getTime()
+ * 1580486400000
+ * new Date("2020-3-1").getTime()
+ * 1582992000000
+ * new Date("2020-4-1").getTime()
+ * 1585670400000
+ * new Date("2020-5-1").getTime()
+ * 1588262400000
+
+ */
