@@ -7,6 +7,10 @@ const roomInfoSchema = new Schema(
       ref: "build_info",
       required: true,
     },
+    billId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "bill_info",
+    },
     houseName: {
       type: String,
       required: true,
@@ -14,7 +18,7 @@ const roomInfoSchema = new Schema(
     houseStatus: {
       type: Number,
       default: 0,
-      enum: [0, 1, 2, 3], // 未发布 发布未出租 已出租
+      enum: [0, 1, 2], // 未发布 发布未出租 已出租
     },
     unitType: { type: Number }, // 户型
     houseConfig: {

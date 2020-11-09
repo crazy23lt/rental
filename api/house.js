@@ -3,22 +3,23 @@ module.exports = async (req, res) => {
   const { id, status = null, type = null } = req.body; // 公寓ID
   const { page, size } = req.params;
   try {
-    let querySelect = {};
+    let querySelect = {
+      buildId: id,
+    };
     // 未出租  包含  1，2
-    if (status - 0 === 0 && type === null) {
-      querySelect.buildId = id;
-      querySelect.houseStatus = status;
+    if (status - 0 === 1 && type === null) {
+      querySelect.houseStatus = { $lte: status - 0 };
     }
     // 暗房型查询
     if (type !== null && status === null) {
-      querySelect.buildId = id;
       querySelect.unitType = type - 0;
     }
-    console.info(querySelect);
     let CountHouse = await Room.countDocuments(querySelect);
-    let filterHouse = await Room.find(querySelect, {
-      buildId: 0,
-    })
+    let filterHouse = await Room.find(querySelect)
+      .populate({
+        path: "billId",
+        select: { "duration.endTime": 1, _id: 0 },
+      })
       .limit(size - 0)
       .skip((page - 1) * size);
     if (filterHouse && CountHouse) {

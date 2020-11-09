@@ -1,6 +1,7 @@
 const Room = require("../model/room_info");
 module.exports = async (req, res) => {
   const { id, status } = req.body;
+  console.info(req.body);
   try {
     let ret = null;
     // 未发布 发布未出租 已出租
@@ -11,6 +12,7 @@ module.exports = async (req, res) => {
         { new: true, select: { buildId: 0 } }
       );
     }
+    console.info(ret);
     if (ret) {
       res.json({
         data: ret,

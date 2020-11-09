@@ -2,7 +2,9 @@ const Build = require("./build");
 const Login = require("./login");
 const Contr = require("./contract");
 const Bill = require("./bill");
+// const Bill = require("./bill2");
 const Query = require("./query");
+const { generateToken } = require("../utils/jwt");
 require("../model/user_info");
 require("../model/build_info");
 require("../model/room_info");
@@ -28,16 +30,16 @@ module.exports = (app) => {
     if (req.method == "OPTIONS") res.sendStatus(200);
     /*让options请求快速返回*/ else next();
   });
-
   app.use("/build", Build);
   app.use("/login", Login);
   app.use("/contr", Contr);
   app.use("/bill", Bill);
   app.use("/query", Query);
+  // app.use("/bill2", Bill2);
   // api 部署测试
   app.post("/test", (req, res) => {
     res.json({
-      data: null,
+      data: generateToken(req.body),
       meta: { msg: "Api部署完毕，已能够正常访问", status: 200 },
     });
   });

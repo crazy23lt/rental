@@ -19,7 +19,17 @@ module.exports = async (req, res) => {
       roomConfig: {
         houseName,
         unitType,
-        houseConfig,
+        houseConfig: {
+          bathroom: houseConfig.bathroom === "none" ? 0 : houseConfig.bathroom,
+          air_condition:
+            houseConfig.air_condition === "none"
+              ? 0
+              : houseConfig.air_condition,
+          geyser: houseConfig.geyser === "none" ? 0 : houseConfig.geyser,
+          gas: houseConfig.gas === "none" ? 0 : houseConfig.gas,
+          broadband:
+            houseConfig.broadband === "none" ? 0 : houseConfig.broadband,
+        },
         houseCost,
       },
       Baseinfo,

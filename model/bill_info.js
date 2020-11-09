@@ -2,66 +2,58 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const BillInfoSchema = new Schema(
   {
-    buildID: {
+    // 合同ID
+    contractId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "build_info",
+      ref: "contract_info",
       required: true,
     },
-    startTime: {
+    // 持续时间
+    duration: {
+      startTime: {
+        type: Number,
+        required: true,
+      },
+      endTime: {
+        type: Number,
+        required: true,
+      },
+    },
+    // 消耗
+    consume: {
+      //用水量
+      water: {
+        start: {
+          type: Number,
+          required: true,
+        },
+        end: {
+          type: Number,
+        },
+      },
+      //用电量
+      electric: {
+        start: {
+          type: Number,
+          required: true,
+        },
+        end: {
+          type: Number,
+        },
+      },
+    },
+    // 账单状态
+    status: {
       type: Number,
-      required: true,
-    },
-    endTime: {
-      type: Number,
-      required: true,
-    },
-    userName: {
-      type: String,
-      required: true,
-    },
-    hourse: {
-      type: String,
-      required: true,
-    },
-    rent: {
-      type: Number,
-      required: true,
-    },
-    clear: Number,
-    intiWater: {
-      type: Number,
-      required: true,
-    },
-    preWater: Number,
-    curWater: Number,
-    eachWater: {
-      type: Number,
-      required: true,
-    },
-    initElectric: {
-      type: Number,
-      required: true,
-    },
-    preElectric: Number,
-    curElectric: Number,
-    eachElectric: {
-      type: Number,
-      required: true,
-    },
-    eachInter: Number,
-    other: Array,
-    othercost: Array,
-    beforeCost: {
-      trpe: Number,
       default: 0,
+      enum: [0, 1], // 待付账单：0，已付账单：1
     },
-    max: {
-      trpe: Number,
-      default: 0,
-    },
-    toalCost: {
+    // 支付方式
+    pay: {
       type: Number,
+      enum: [0, 1, 2, 3], // 微信  银行   支付宝   现金
     },
+    // 
   },
   { collection: "bill_info" }
 );

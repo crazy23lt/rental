@@ -1,5 +1,6 @@
 const User = require("../model/user_info");
 const jscode = require("../utils/jscode2session");
+const { generateToken } = require("../utils/jwt");
 module.exports = async (req, res) => {
   const { code, wxinfo: insertwx } = req.body;
   try {
@@ -13,6 +14,8 @@ module.exports = async (req, res) => {
     if (findUser) {
       // 已注册
       const { openid, role, userinfo, wxinfo, _id } = findUser;
+      let token = generateToken({ role, _id });
+      console.info(token);
       res.json({
         data: {
           openid,
@@ -21,6 +24,7 @@ module.exports = async (req, res) => {
           userinfo: userinfo.name === null ? null : userinfo,
           nickName: wxinfo.nickName,
           avatarUrl: wxinfo.avatarUrl,
+          token: token ? token : "没token",
         },
         meta: {
           msg: "登陆成功",

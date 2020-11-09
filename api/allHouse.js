@@ -2,9 +2,10 @@ const Room = require("../model/room_info");
 module.exports = async (req, res) => {
   const { id } = req.body;
   try {
-    let ret = await Room.find(
-      { buildId: id }, { buildId: 0 }
-    );
+    let ret = await Room.find({ buildId: id }, { buildId: 0 }).populate({
+      path: "billId",
+      select: { "duration.endTime": 1, _id: 0 },
+    });
     if (ret) {
       res.json({
         data: ret,

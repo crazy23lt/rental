@@ -46,6 +46,7 @@ module.exports = async (req, res) => {
       },
       { new: true, select: { buildId: 1 } }
     );
+    /*
     const { roomId, time, tenantId, roomConfig, Baseinfo } = vis;
     let initBill = await new Bill({
       buildID: roomId.buildId,
@@ -60,8 +61,39 @@ module.exports = async (req, res) => {
       initElectric: Baseinfo.electric,
       eachElectric: roomConfig.houseCost.electricity,
       eachInter: roomConfig.houseCost.net,
+      beforeCost: 0,
     }).save();
-    if (initBill && changeStatus && vis) {
+    let rret = await Room.findByIdAndUpdate(
+      queryInfo.roomId,
+      {
+        billId: initBill._id,
+      },
+      { new: true }
+    );
+    */
+    let initBill = await new Bill({
+      contractId: id,// 合同ID
+      duration: {
+        startTime: queryInfo.time.beginTime,
+        endTime: nextMonth(queryInfo.time.beginTime)
+      },
+      consume: {
+        water: {
+          start: queryInfo.Baseinfo.water
+        },
+        electric: {
+          start: queryInfo.Baseinfo.electric
+        }
+      }
+    }).save();
+    await Room.findByIdAndUpdate(
+      queryInfo.roomId,
+      {
+        billId: initBill._id,
+      },
+      { new: true }
+    );
+    if (changeStatus && vis) {
       res.json({
         data: null,
         meta: { msg: "合同签订成功", status: 200 },
