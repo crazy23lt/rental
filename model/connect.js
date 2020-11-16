@@ -14,7 +14,7 @@ const mongoose = require("mongoose");
 //     console.info(err);
 //   });
 mongoose
-  .connect(`mongodb://127.0.0.1:27017/room_db`, {
+  .connect(`mongodb://127.0.0.1:27017/rent_test`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,

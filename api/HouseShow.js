@@ -1,19 +1,32 @@
 const Room = require("../model/room_info");
 module.exports = async (req, res) => {
   const { page, size } = req.params;
-  const { location } = req.body;
+  const { location, unitType } = req.body;
   try {
-    // let count = await Room.countDocuments({
-    //   houseType: type,
-    //   houseStatus: 0, // 发布未出租
-    // });
-    let ret = await Room.find({ houseStatus: 1 })
-      .populate({ path: "buildId", populate: { path: "landlordId" } })
-      .limit(size - 0)
-      .skip((page - 1) * size);
+    let unit = unitType ? { unitType } : {};
+    let count = await Room.countDocuments(
+      Object.assign({ houseStatus: 1 }, unit)
+    );
+    let ret = await Room.find(Object.assign({ houseStatus: 1 }, unit), {
+      "houseCost.rent": 1,
+      houseConfig: 1,
+      houseName: 1,
+      unitType: 1,
+      views: 1,
+    })
+      .populate({
+        path: "buildId",
+        select: { "buildInfo.buildName": 1, buildCost: 1, _id: 0 },
+        populate: {
+          path: "landlordId",
+          select: { "userinfo.village": 1, _id: 0, "userinfo.phone": 1 },
+        },
+      })
+      .limit(40)
+      .skip((page - 1) * 40);
     if (ret) {
       res.json({
-        data: { ret },
+        data: { ret, count },
         meta: {
           status: 200,
           msg: "条件查询成功",

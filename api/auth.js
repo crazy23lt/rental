@@ -15,7 +15,6 @@ module.exports = async (req, res) => {
       // 已注册
       const { openid, role, userinfo, wxinfo, _id } = findUser;
       let token = generateToken({ role, _id });
-      console.info(token);
       res.json({
         data: {
           openid,
@@ -36,6 +35,7 @@ module.exports = async (req, res) => {
       const saveData = Object.assign({ wxinfo: insertwx }, { openid: opid });
       let ret = await new User(saveData).save();
       const { openid, role, userinfo, wxinfo, _id } = ret;
+      let token = generateToken({ role, _id });
       res.json({
         data: {
           openid,
@@ -44,6 +44,7 @@ module.exports = async (req, res) => {
           userinfo: userinfo.name === null ? null : userinfo,
           nickName: wxinfo.nickName,
           avatarUrl: wxinfo.avatarUrl,
+          token: token ? token : "没token",
         },
         meta: {
           msg: "注册并登陆成功",

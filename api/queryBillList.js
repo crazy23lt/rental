@@ -1,4 +1,5 @@
 const Room = require("../model/room_info");
+const Contract = require("../model/contract_info");
 const moment = require("moment"); //引入moment
 moment.locale("zh-cna"); //设置时
 module.exports = async (req, res) => {
@@ -6,32 +7,27 @@ module.exports = async (req, res) => {
   const { page, size } = req.params;
   const time = moment().format("x");
   try {
-    /**
-     * $lt,$lte,$gt,$gte.
-     */
-    let RoomQuery = await Room.find(
-      { buildId, houseStatus: 2 },
-      { billId: 1, _id: 0 }
+    let ConList = await Contract.find(
+      { invalid: { $in: [1, 2] } },
+      { time: 1, _id: 1, roomId: 1, residents: 1 }
     )
       .populate({
-        path: "billId",
-        select: { consume: 0, __v: 0 },
-        model: "bill_info",
-        match: { "duration.endTime": { $lt: time } },
-        populate: {
-          path: "contractId",
-          select: { "roomConfig.houseName": 1, _id: 0 },
-          populate: {
-            path: "tenantId",
-            select: { "wxinfo.nickName": 1, _id: 0 },
-          },
-        },
+        path: "roomId",
+        match: { buildId: buildId },
+        select: { houseName: 1, _id: 0 },
       })
-      .lean();
-    let filterBill = RoomQuery.filter((item) => item.billId !== null);
-    if (RoomQuery) {
+      .populate({
+        path: "billId",
+        match: { "duration.startTime": { $lte: time } },
+        select: { duration: 1 },
+      });
+    // 过滤出公寓所属账单
+    let filterBill = ConList.filter((item) => item.roomId !== null);
+    // 过滤出公寓到期账单
+    let filterBill2 = filterBill.filter((item) => item.billId !== null);
+    if (filterBill2) {
       res.json({
-        data: filterBill,
+        data: filterBill2,
         meta: {
           status: 200,
           msg: "成功！获取公寓内收租房屋账单",

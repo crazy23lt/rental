@@ -9,14 +9,21 @@ module.exports = async (req, res) => {
           buildInfo: 1,
         },
       })
-      .lean();
+      .populate({
+        path: "buildId",
+        select: { landlordId: 1, _id: 0, "buildInfo.buildName": 1 },
+        populate: {
+          path: "landlordId",
+          select: {
+            "userinfo.provinces": 1,
+            "userinfo.city": 1,
+            "userinfo.area": 1,
+            "userinfo.village": 1,
+            _id: 0,
+          },
+        },
+      });
     if (ret) {
-      let count = ret.views + 1;
-      let views = await Room.findByIdAndUpdate(
-        id,
-        { views: count },
-        { new: true }
-      );
       res.json({
         data: ret,
         meta: {

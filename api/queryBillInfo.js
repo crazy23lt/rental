@@ -6,13 +6,14 @@ module.exports = async (req, res) => {
   const { billId } = req.body;
   const time = moment().format("x");
   try {
-    let BillInfo = await Bill.findById(billId, { __v: 0, status: 0 })
+    let BillInfo = await Bill.findById(billId, { __v: 0 })
       .populate({
         path: "contractId",
         select: {
           "roomConfig.houseName": 1,
           _id: 0,
           "roomConfig.houseCost": 1,
+          roomId: 1,
         },
         populate: {
           path: "tenantId",
@@ -28,12 +29,15 @@ module.exports = async (req, res) => {
     let endMonth = new Date(endtime).getMonth();
     let endYear = new Date(endtime).getFullYear();
     // 拖欠账单数量
-    let owe = currMonth + 12 * (currYear - endYear) - endMonth;
+    let owe = 0;
+    if (currMonth > endMonth) {
+      owe = 12 * (currYear - endYear) + currMonth - endMonth;
+    }
     BillInfo.owe = owe;
     //-----------------------------------------------
     const { consume, contractId } = BillInfo;
     // 电水费
-    BillInfo.total = total(consume, contractId, owe);
+    BillInfo.total = total(consume, contractId, 0);
     //-----------------------------------------------
     // 设置 账单跨度月份
     BillInfo.duration.endTime =
