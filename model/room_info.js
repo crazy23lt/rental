@@ -30,7 +30,6 @@ const roomInfoSchema = new Schema(
       air_condition: {
         type: Number,
         default: 0,
-        enum: [0, 1],
       },
       geyser: {
         type: Number,
@@ -69,6 +68,10 @@ const roomInfoSchema = new Schema(
         type: Number,
         default: 0,
       },
+    },
+    views: {
+      type: Number,
+      default: 0,
     },
   },
   { collection: "room_info" }

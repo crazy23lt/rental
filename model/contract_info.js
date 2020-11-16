@@ -43,8 +43,6 @@ const ContractInfoSchema = new Schema(
         air_condition: {
           type: Number,
           default: 0,
-          enum: [0, 1],
-          required: true,
         },
         geyser: {
           type: Number,
@@ -92,7 +90,7 @@ const ContractInfoSchema = new Schema(
     invalid: {
       type: Number,
       default: 0,
-      enum: [0, 1, 2], // 0 合同初始化完成，1 合同生效， 2 合同过期
+      enum: [0, 1, 2, 3], // 0 合同初始化完成，1 租客签订合同完成 2 房东确认合同  3 合同过期
     },
     tenantId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -104,7 +102,6 @@ const ContractInfoSchema = new Schema(
       ref: "user_info",
       default: null,
     },
-
     // 合同信息
     Baseinfo: {
       persons: {
@@ -121,6 +118,21 @@ const ContractInfoSchema = new Schema(
         type: Number,
         required: true,
       },
+    },
+    // 住户信息
+    residents: [
+      {
+        userName: {
+          type: String,
+          default: null,
+        },
+        userIdCard: { type: String, default: null },
+        userPhone: { type: String, default: null },
+      },
+    ],
+    billId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "bill_info",
     },
   },
   { collection: "contract_info" }

@@ -5,6 +5,7 @@ const userInfoSchema = new Schema(
     openid: { type: String, required: true },
     wxinfo: { type: Object, required: true },
     userinfo: {
+      wxnumber: { type: String, default: null },
       name: { type: String, default: null },
       phone: { type: String, default: null },
       idcard: { type: String, default: null },

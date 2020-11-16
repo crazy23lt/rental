@@ -11,8 +11,8 @@ module.exports = async (req, res) => {
     houseCost,
     Baseinfo,
   } = req.body;
-  // console.info(req.body);
   try {
+    // 初始化一份合同基本信息（房东填写）
     let ret = await new Contract({
       roomId,
       time: { beginTime },
