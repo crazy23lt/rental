@@ -9,6 +9,11 @@ module.exports = async (req, res) => {
     /**
      * $lt,$lte,$gt,$gte.
      */
+    /**
+     * 公寓ID
+     * 房间处于出租状态
+     * 
+     */
     let RoomQuery = await Room.find(
       { buildId, houseStatus: 2 },
       { billId: 1, _id: 0 }

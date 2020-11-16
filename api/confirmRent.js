@@ -12,11 +12,11 @@ module.exports = async (req, res) => {
         let startTime = InfoBill.duration.startTime;
         let endTime = InfoBill.duration.endTime;
         // 当前年月
-        let currMonth = new Date(time - 0).getMonth();
+        let currMonth = new Date(time - 0).getMonth(); 
         let currYear = new Date(time - 0).getFullYear();
         // 账单结束年月
         let endMonth = new Date(endTime).getMonth();
-        let endYear = new Date(endTime).getFullYear();
+        let endYear = new Date(endTime).getFullYear(); 
         // 拖欠账单数量
         let owe = currMonth + (12 * (currYear - endYear)) - endMonth;
         // 新建账单开始时间戳
