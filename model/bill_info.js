@@ -65,3 +65,5 @@ const BillInfoSchema = new Schema(
   { collection: "bill_info" }
 );
 module.exports = mongoose.model("bill_info", BillInfoSchema);
+
+

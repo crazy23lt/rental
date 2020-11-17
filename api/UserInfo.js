@@ -1,19 +1,16 @@
 const User = require("../model/user_info");
 const Contract = require("../model/contract_info");
 const Room = require("../model/room_info");
-const { verifyToken } = require("../utils/jwt");
 module.exports = async (req, res) => {
-  const { userid } = req.body;
+  const { userid = null } = req.body;
+  console.info(`查询对象：userid:${userid}`);
+  console.info(`使用接口的人：_userid:${req._userid}`);
   try {
-    let tid = null;
-    if (req.headers.authorization) {
-      let token = req.headers.authorization;
-      let { role, _id } = JSON.parse(verifyToken(token));
-      tid = _id;
-    }
-    let qid = userid || tid;
-    let UserInfo = await User.findById(qid);
-    let ret = await Contract.findOne({ tenantId: tid }, { invalid: 0 });
+    let UserInfo = await User.findById(userid || req._userid);
+    let ret = await Contract.findOne(
+      { tenantId: userid || req._userid },
+      { invalid: 0 }
+    );
     let buildName = null;
     if (ret) {
       buildName = await Room.findById(ret.roomId, { buildId: 1 }).populate({

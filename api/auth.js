@@ -12,9 +12,12 @@ module.exports = async (req, res) => {
       { new: true }
     ).lean();
     if (findUser) {
-      // 已注册
       const { openid, role, userinfo, wxinfo, _id } = findUser;
       let token = generateToken({ role, _id });
+      console.info(token);
+      // 已注册
+      // 数据库存入token
+      await User.findByIdAndUpdate(_id, { token });
       res.json({
         data: {
           openid,
@@ -32,10 +35,15 @@ module.exports = async (req, res) => {
       });
     } else {
       // 没有注册过
-      const saveData = Object.assign({ wxinfo: insertwx }, { openid: opid });
+      const saveData = Object.assign(
+        { wxinfo: insertwx },
+        { openid: opid, token: "" }
+      );
       let ret = await new User(saveData).save();
       const { openid, role, userinfo, wxinfo, _id } = ret;
       let token = generateToken({ role, _id });
+      // 数据库存入token
+      await User.findByIdAndUpdate(_id, { token });
       res.json({
         data: {
           openid,

@@ -19,7 +19,7 @@ module.exports = async (req, res) => {
       .populate({
         path: "billId",
         match: { "duration.startTime": { $lte: time } },
-        select: { duration: 1 },
+        select: { duration: 1, status: 1 },
       });
     // 过滤出公寓所属账单
     let filterBill = ConList.filter((item) => item.roomId !== null);

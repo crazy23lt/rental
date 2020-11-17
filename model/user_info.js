@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+
 const userInfoSchema = new Schema(
   {
     openid: { type: String, required: true },
@@ -18,6 +19,10 @@ const userInfoSchema = new Schema(
       type: Number,
       default: 0,
       enum: [0, 1], // 0：普通租客    1：房东
+    },
+    token: {
+      type: String,
+      // required: true,
     },
   },
   { collection: "user_info" }

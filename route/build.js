@@ -1,16 +1,64 @@
 const { verifyToken } = require("../utils/jwt");
+const User = require("../model/user_info");
 const Build = require("express").Router();
 Build.use(async (req, res, next) => {
-  if (req.headers.authorization) {
-    let token = req.headers.authorization;
-    let { role, _id } = JSON.parse(verifyToken(token));
-    // 此处能做权限拦截
-    // req.userid = _id;
-    // console.info(role, _id);
-  }
-  next();
+  // if (req.headers.authorization) {
+  //   let tokenH = req.headers.authorization;
+  //   let tokenParse = verifyToken(tokenH);
+  //   if (tokenParse !== "err") {
+  //     // token 验证有效
+  //     let { _id, role } = JSON.parse(tokenParse);
+  //     let queryUserInfo = await User.findById(_id).lean();
+  //     let { token } = queryUserInfo;
+  //     // 对比数据库token和客户端token
+  //     if (token === tokenH) {
+  //       // token 相同
+  //       if (role !== 1) {
+  //         // 用户是租客
+  //         res.json({
+  //           data: null,
+  //           meta: {
+  //             msg: "用户权限不够请前往认证房东",
+  //             status: 302,
+  //           },
+  //         });
+  //       } else {
+  //         // 用户是房东
+  //         next();
+  //       }
+  //     } else {
+  //       // token 不相同
+  //       res.json({
+  //         data: null,
+  //         meta: {
+  //           msg: "token已失效请重新登陆",
+  //           status: 302,
+  //         },
+  //       });
+  //     }
+  //   } else {
+  //     // token 验证无效
+  //     res.json({
+  //       data: null,
+  //       meta: {
+  //         msg: "token已过期请重新登陆",
+  //         status: 302,
+  //       },
+  //     });
+  //   }
+  // } else {
+  //   res.json({
+  //     data: null,
+  //     meta: {
+  //       msg: "请携带Token再来访问",
+  //       status: 302,
+  //     },
+  //   });
+  // }
+  next()
 });
 // 新建公寓
+
 Build.post("/add", require("../api/AddBuild"));
 // 获取当前房东所有公寓
 Build.post("/allbuild/:page/:size", require("../api/AllBuild"));

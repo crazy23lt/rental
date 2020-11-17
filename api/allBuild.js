@@ -20,7 +20,7 @@ module.exports = async (req, res) => {
       )
         .populate({
           path: "billId",
-          select: { "duration.endTime": 1, _id: 0 },
+          select: { duration: 1, _id: 0 },
         })
         .limit(size - 0)
         .skip((page - 1) * size);

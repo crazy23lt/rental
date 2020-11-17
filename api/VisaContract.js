@@ -62,7 +62,7 @@ module.exports = async (req, res) => {
     );
     if (changeStatus && vis) {
       res.json({
-        data: { deletedCount: ret.deletedCount },
+        data: { deletedCount: ret.deletedCount, billId: initBill._id },
         meta: { msg: "合同签订成功", status: 200 },
       });
     } else {

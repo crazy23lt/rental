@@ -7,6 +7,15 @@ module.exports = async (req, res) => {
         path: "buildId",
         select: {
           buildInfo: 1,
+          landlordId: 1,
+        },
+        populate: {
+          path: "landlordId",
+          select: {
+            "userinfo.wxnumber": 1,
+            "userinfo.phone": 1,
+            _id: 0,
+          },
         },
       })
       .lean();

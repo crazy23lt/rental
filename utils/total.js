@@ -9,11 +9,12 @@ const total = function (consume, contractId, owe) {
       : 0;
   let cw = waterCost * contractId.roomConfig.houseCost.water;
   let ce = electricCost * contractId.roomConfig.houseCost.electricity;
+
   // 一个月的房租
   let cr =
     contractId.roomConfig.houseCost.clear +
     contractId.roomConfig.houseCost.rent +
     contractId.roomConfig.houseCost.net;
-  return cr * owe + cr + cw + ce;
+  return cr * owe + cw + ce;
 };
 module.exports = total;

@@ -12,6 +12,7 @@ module.exports = async (req, res) => {
         let UpdataInfo = await User.findByIdAndUpdate(
           _id,
           Object.assign(roleChange, {
+            token: generateToken({ role: 1, _id }),
             userinfo: {
               wxnumber,
               name,
@@ -26,8 +27,7 @@ module.exports = async (req, res) => {
           { new: true, select: { __v: 0 } }
         );
         if (UpdataInfo) {
-          const { userinfo, role, wxinfo, _id } = UpdataInfo;
-          let token = generateToken({ role, _id });
+          const { userinfo, role, wxinfo, _id, token } = UpdataInfo;
           res.json({
             data: {
               userid: _id,

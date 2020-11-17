@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+
 const buildInfoSchema = new Schema(
   {
     // 房东ID

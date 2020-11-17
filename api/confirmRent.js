@@ -9,48 +9,74 @@ module.exports = async (req, res) => {
   const time = moment().format("x");
   try {
     // 获取账单信息
-    let InfoBill = await Bill.findById(billId)
+    let BillInfo = await Bill.findById(billId)
       .populate({
         path: "contractId",
-        select: { roomId: 1, _id: 0, "roomConfig.houseCost": 1 },
+        select: { roomId: 1, _id: 0, "roomConfig.houseCost": 1, time: 1 },
       })
       .lean();
-    // 获取账单计算前信息
-    let startTime = InfoBill.duration.startTime;
-    let endTime = InfoBill.duration.endTime;
+    // 房租值
+    const { consume, contractId } = BillInfo;
+    // 账单时间
+    let billEndTime = BillInfo.duration.endTime;
+    let billStartTime = BillInfo.duration.startTime;
+    // 合同时间
+    let contStartTime = BillInfo.contractId.time.beginTime;
     // 当前年月
     let currMonth = new Date(time - 0).getMonth();
     let currYear = new Date(time - 0).getFullYear();
     // 账单结束年月
-    let endMonth = new Date(endTime).getMonth();
-    let endYear = new Date(endTime).getFullYear();
-    // 拖欠账单数量
-    let owe = 0;
-    if (currMonth > endMonth) {
-      owe = 12 * (currYear - endYear) + currMonth - endMonth;
+    let endMonth = new Date(billStartTime).getMonth();
+    let endYear = new Date(billStartTime).getFullYear();
+    if (billStartTime === contStartTime) {
+      // 含首月账单
+      let { clear, rent, net } = contractId.roomConfig.houseCost;
+      BillInfo.firstTotal = clear + rent + net;
+      let owe = 0;
+      if (time >= billEndTime) {
+        console.info("含首月账单产生拖欠")
+        // 产生拖欠
+        owe = 12 * (currYear - endYear) + currMonth - endMonth;
+        BillInfo.total = total(consume, contractId, owe);
+        BillInfo.owe = owe;
+      } else {
+        console.info("含首月账单无拖欠")
+        // 无拖欠
+        BillInfo.total = total(consume, contractId, owe);
+        BillInfo.owe = owe;
+      }
+    } else {
+      // 不含首月账单
+      let owe = 0;
+      if (time >= billEndTime) {
+        console.info("不含首月账单产生拖欠")
+        // 产生拖欠
+        owe = 12 * (currYear - endYear) + currMonth - endMonth;
+        BillInfo.total = total(consume, contractId, owe);
+        BillInfo.owe = owe;
+      } else {
+        console.info("不含首月账单无拖欠")
+        // 无拖欠
+        BillInfo.total = total(consume, contractId, owe);
+        BillInfo.owe = owe;
+      }
     }
-    const { consume, contractId } = InfoBill;
-    let totalret = total(consume, contractId, 0);
-    // 新建账单开始时间戳
-    let newStartTime = moment(endTime).add(owe, "months").format("x");
-    // 新建账单结束时间戳（默认一个月）
-    let newEndTime = moment(endTime)
-      .add(owe + 1, "months")
+    // // 新建账单开始时间戳
+    let newStartTime = moment(billEndTime).add(BillInfo.owe, "months").format("x");
+    // // 新建账单结束时间戳（默认一个月）
+    let newEndTime = moment(billEndTime)
+      .add(BillInfo.owe + 1, "months")
       .format("x");
-    // 设置完结账单状态与完结时间
     let UpdateBill = await Bill.findByIdAndUpdate(billId, {
       status: 2,
       "duration.currTime": newStartTime - 0,
-      total: totalret,
+      total: (BillInfo.total || 0) + (BillInfo.firstTotal || 0),
     });
-    // 电水费
-    // let totle = total(consume, contractId, owe);
-    // console.info(totle);
     // 新建下月账单
     let CreateBill = await new Bill({
       contractId: UpdateBill.contractId,
-      "consume.water.start": InfoBill.consume.water.end,
-      "consume.electric.start": InfoBill.consume.electric.end,
+      "consume.water.start": BillInfo.consume.water.end,
+      "consume.electric.start": BillInfo.consume.electric.end,
       "duration.startTime": newStartTime - 0,
       "duration.endTime": newEndTime - 0,
     }).save();
@@ -71,9 +97,9 @@ module.exports = async (req, res) => {
       },
       { new: true }
     );
-    if (UpdateBill) {
+    if (CreateBill) {
       res.json({
-        data: null,
+        data: CreateBill,
         meta: {
           status: 200,
           msg: "成功！账单结账。",

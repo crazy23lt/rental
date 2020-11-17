@@ -1,5 +1,6 @@
 // 创建一个连接好的mongoose
 const mongoose = require("mongoose");
+
 mongoose
   .connect(`mongodb://RentalAdmin:liutao2568%40gmail.com@localhost:27017/Rental`, {
     useNewUrlParser: true,
@@ -14,7 +15,7 @@ mongoose
     console.info(err);
   });
 // mongoose
-//   .connect(`mongodb://127.0.0.1:27017/room_db`, {
+//   .connect(`mongodb://127.0.0.1:27017/rent_db`, {
 //     useNewUrlParser: true,
 //     useUnifiedTopology: true,
 //     useFindAndModify: false,

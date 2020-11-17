@@ -8,6 +8,8 @@ module.exports = async (req, res) => {
       time: 1,
       roomConfig: 1,
       Baseinfo: 1,
+      residents:1,
+      invalid:1
     }).populate({ path: "roomId", select: { houseStatus: 1 } });
 
     if (ret) {

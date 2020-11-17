@@ -3,10 +3,13 @@ const Login = require("./login");
 const Contr = require("./contract");
 const Bill = require("./bill");
 const Query = require("./query");
-const { generateToken } = require("../utils/jwt");
+const Open = require("./open");
+const { generateToken, verifyToken } = require("../utils/jwt");
+const User = require("../model/user_info");
 require("../model/user_info");
 require("../model/build_info");
 require("../model/room_info");
+
 module.exports = (app) => {
   // 设置跨域和相应数据格式
   app.all("*", function (req, res, next) {
@@ -34,13 +37,19 @@ module.exports = (app) => {
   app.use("/contr", Contr);
   app.use("/bill", Bill);
   app.use("/query", Query);
+  app.use("/open", Open);
   // api 部署测试
   app.post("/test", (req, res) => {
+    let token = "你没有给我没有token！";
+    if (req.headers.authorization) {
+      token = `这是你token凭证${req.headers.authorization}`;
+    }
     res.json({
-      data: generateToken(req.body),
+      data: token,
       meta: { msg: "Api部署完毕，已能够正常访问", status: 200 },
     });
   });
+
   app.use((req, res) => {
     res.json({ error: "api地址有问题", status: 202 });
   });
